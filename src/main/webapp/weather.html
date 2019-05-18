@@ -1,0 +1,140 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/styles.css">
+	</head>
+
+	<body>
+		<div id="frame">
+			<div id="myLocation">
+				<h3>Mijn locatie</h3>
+				<label id="landcode">LandCode: </label>
+				<label id="land">Land: </label>
+				<label id="regio">Regio: </label>
+				<label id="stad">Stad: </label>
+				<label id="postcode">Postcode: </label>
+				<label id="latitude">Latitude: </label>
+				<label id="longitude">Longitude: </label>
+				<label id="ip">IP: </label>
+			</div>
+
+			<br style="clear: both;"/>
+
+
+			<div id="weatherInfo">
+				<h3>Het weer in <span id="weatherInfo_city"> </span></h3>
+				<label id="weatherInfo_temperatuur">Temperatuur: </label>
+				<label id="weatherInfo_luchtvochtigheid">Luchtvochtigheid: </label>
+				<label id="weatherInfo_windsnelheid">Windsnelheid: </label>
+				<label id="weatherInfo_windrichting">Windrichting: </label>
+				<label id="weatherInfo_zonsopgang">Zonsopgang: </label>
+				<label id="weatherInfo_zondsondergang">Zonsondergang: </label>
+			</div>
+
+			<br style="clear: both;"/>
+
+			<div id="countryList">
+				<h3>Beschikbare vakantiebestemmingen</h3>
+				<table>
+					<thead>
+					<tr>
+						<th>land</th>
+						<th>hoofdstad</th>
+						<th>regio</th>
+						<th>oppervlakte</th>
+						<th>inwoners</th>
+					</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<script>
+		function degToCompass(num) {
+			const val =  Math.floor((num / 45) + 0.5);
+			const arr = ["N","NE","E", "SE","S","SW","W","NW"];
+			return arr[(val % 8)]
+		}
+
+		function showWeather(latitude, longitude, city) {
+			document.querySelector('#weatherInfo_city').innerHTML = city;
+			fetch('https://api.openweathermap.org/data/2.5/weather?lat=' + latitude + '&lon=' + longitude + '&APPID=00fb0158113e4b223c8064f484b43ac2&units=Metric')
+			.then(response => response.json())
+			.then((myJson) => {
+				document.querySelector('#weatherInfo_temperatuur').innerText = "Temperatuur: " + myJson.main.temp;
+				document.querySelector('#weatherInfo_luchtvochtigheid').innerText = "Luchtvochtigheid: " + myJson.main.humidity;
+				document.querySelector('#weatherInfo_windsnelheid').innerText = "Windsnelheid: " + myJson.wind.speed;
+				document.querySelector('#weatherInfo_windrichting').innerText = "Windrichting: " + degToCompass(myJson.wind.deg);
+
+				let date = new Date(myJson.sys.sunrise * 1000);
+				date.setHours(date.getHours());
+				sunrise = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+
+				let date2 = new Date(myJson.sys.sunset * 1000);
+				date2.setHours(date2.getHours());
+				sunset = date2.getHours() + ':' + date2.getMinutes() + ':' + date2.getSeconds();
+
+				document.querySelector('#weatherInfo_zonsopgang').innerText = "Zonsopgang: " + sunrise;
+				document.querySelector('#weatherInfo_zondsondergang').innerText = "Zonsondergang: " + sunset;
+			})
+		}
+
+		function loadCountries() {
+			fetch('http://localhost:8080/firstapp/restservices/countries')
+				.then(response => response.json())
+				.then((myJson) => {
+					let table = document.querySelector('tbody');
+
+					var i = 0;
+					for (i; i < myJson.length; i++) {
+						table.innerHTML = table.innerHTML + "<tr class=" + "country_list" + " data-lang='" + myJson[i].lat + "' data-long='" + myJson[i].long + "' data-land='" + myJson[i].capital +"'>" +
+							"<td>" + myJson[i].name + "</td>" +
+							"<td>" + myJson[i].capital + "</td>" +
+							"<td>" + myJson[i].region + "</td>" +
+							"<td>" + myJson[i].surface + "</td>" +
+							"<td>" + myJson[i].population + "</td>" +
+						"</tr>";
+					}
+					
+					var landen = document.getElementsByClassName('country_list');
+					
+					for (i = 0; i < landen.length; i++) {
+						landen[i].addEventListener('click', (event) => {
+							let land = event.target.closest(".country_list");
+							showWeather(land.getAttribute("data-lang"), land.getAttribute("data-long"), land.getAttribute("data-land"));
+						}, false);
+					}
+			});
+		}
+		
+		function initPage() {
+			fetch('https://ipapi.co/json/')
+			.then(response => response.json())
+			.then((myJson) => {
+				document.querySelector('#landcode').append(myJson.country);
+				document.querySelector('#land').append(myJson.country_name);
+				document.querySelector('#regio').append(myJson.region);
+				document.querySelector('#stad').append(myJson.city);
+				document.querySelector('#postcode').append(myJson.country_name);
+				document.querySelector('#latitude').append(myJson.latitude);
+				document.querySelector('#longitude').append(myJson.longitude);
+				document.querySelector('#ip').append(myJson.ip);
+
+				showWeather(myJson.latitude, myJson.longitude, myJson.city);
+				loadCountries();
+			});
+		}
+
+		document.querySelector('#myLocation').addEventListener('click', (event) => {
+			let stad = document.querySelector('#stad').textContent;
+			let lat = document.querySelector('#latitude').textContent;
+			let long = document.querySelector('#longitude').textContent;
+			showWeather(lat.slice(10, lat.length), long.slice(11, long.length), stad.slice(6, stad.length));
+		});
+		
+		initPage();
+		</script>
+		<!-- Hier komen jouw script-tags -->
+	</body>
+</html>

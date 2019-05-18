@@ -42,6 +42,9 @@ public class ServiceProvider {
 			job.add("surface", c.getSurface());
 			job.add("government", c.getGovernment());
 			job.add("lat", c.getLatitude());
+			job.add("long", c.getLongitude());
+			job.add("population", c.getPopulation());
+			job.add("region", c.getRegion());
 			
 			jab.add(job);
 		}
