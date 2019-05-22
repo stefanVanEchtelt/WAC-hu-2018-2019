@@ -13,6 +13,10 @@ public class Country {
 	private double latitude;
 	private double longitude;
 	
+	public Country() {
+		
+	}
+	
 	public Country(String code, String iso3, String nm, String cap, String ct, String reg, double sur, int pop, String gov, double lat, double lng) {
 		this.code = code; 
 		this.iso3 = iso3;

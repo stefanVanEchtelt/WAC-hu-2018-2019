@@ -6,8 +6,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import nl.hu.v1wac.firstapp.model.Country;
+import nl.hu.v1wac.firstapp.persistence.CountryPostgresDaolmpl;
 
 public class WorldService {
+	private CountryPostgresDaolmpl db = new CountryPostgresDaolmpl();
 	private List<Country> allCountries = new ArrayList<Country>();
 	
 	public WorldService() {
@@ -30,39 +32,44 @@ public class WorldService {
 	}
 	
 	public List<Country> getAllCountries() {
-		return allCountries;
+		return db.findAll(); 
 	}
 	
 	public List<Country> get10LargestPopulations() {
-		Collections.sort(allCountries, new Comparator<Country>() {
-			public int compare(Country c1, Country c2) {
-				return c2.getPopulation() - c1.getPopulation();
-			};
-		});
+		return db.find10LargestPopulations(); 
 		
-		return allCountries.subList(0, 10);
+//		Collections.sort(allCountries, new Comparator<Country>() {
+//			public int compare(Country c1, Country c2) {
+//				return c2.getPopulation() - c1.getPopulation();
+//			};
+//		});
+//		
+//		return allCountries.subList(0, 10);
 	}
 
 	public List<Country> get10LargestSurfaces() {
-		Collections.sort(allCountries, new Comparator<Country>() {
-			public int compare(Country c1, Country c2) {
-				return (int)(c2.getSurface() - c1.getSurface());
-			};
-		});
+		return db.find10LargestSurfaces(); 
 		
-		return allCountries.subList(0, 10);
+//		Collections.sort(allCountries, new Comparator<Country>() {
+//			public int compare(Country c1, Country c2) {
+//				return (int)(c2.getSurface() - c1.getSurface());
+//			};
+//		});
+//		
+//		return allCountries.subList(0, 10);
 	}
 	
 	public Country getCountryByCode(String code) {
-		Country result = null;
-		
-		for (Country c : allCountries) {
-			if (c.getCode().equals(code)) {
-				result = c;
-				break;
-			}
-		}
-		
-		return result;
+		return db.findByCode(code);
+//		Country result = null;
+//		
+//		for (Country c : allCountries) {
+//			if (c.getCode().equals(code)) {
+//				result = c;
+//				break;
+//			}
+//		}
+//		
+//		return result;
 	}
 }
