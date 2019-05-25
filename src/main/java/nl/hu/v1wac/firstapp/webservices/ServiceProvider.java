@@ -17,8 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 
 import nl.hu.v1wac.firstapp.model.Country;
+import nl.hu.v1wac.firstapp.persistence.CountryPostgresDaolmpl;
 import nl.hu.v1wac.firstapp.webservices.WorldService;
 
 @Path("/countries")
@@ -116,5 +118,51 @@ public class ServiceProvider {
 		
 		JsonArray array = jab.build();	
 		return array.toString();
+	}
+	
+	@PUT
+	@Path("{code}")
+	public Response update(@PathParam("code") String code, @FormParam("name") String naam, @FormParam("capital") String hoofdstad,
+			@FormParam("surface") int oppervlakte, @FormParam("population") int mensen) {
+		CountryPostgresDaolmpl db = new CountryPostgresDaolmpl();
+		Country c = new Country(); 
+		c.setCode(code);
+		c.setName(naam);
+		c.setCapital(hoofdstad);
+		c.setPopulation(oppervlakte);
+		c.setSurface(mensen);
+		boolean r = db.update(c);
+		
+		if (!r) {
+			return Response.status(404).build();
+		}
+		
+		return Response.ok().build();
+	}
+	
+	@POST
+	public Response save(@FormParam("code") String coden, @FormParam("name") String naam, @FormParam("capital") String hoofdstad) {
+		CountryPostgresDaolmpl db = new CountryPostgresDaolmpl();
+		Country c = new Country();
+		c.setCode(coden);
+		c.setName(naam);
+		c.setCapital(hoofdstad);
+		boolean resp = db.save(c);
+		
+		if (!resp) {
+			return Response.status(402).build();
+		}
+		
+		return Response.ok().build();
+	}
+	
+	@DELETE
+	@Path("{code}")
+	public Response delete(@PathParam("code") String code) {
+		CountryPostgresDaolmpl db = new CountryPostgresDaolmpl();
+		Country c = new Country();
+		c.setCode(code);
+		db.delete(c);
+		return Response.ok().build();
 	}
 }
