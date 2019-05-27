@@ -1,10 +1,20 @@
 function deleteLand(code) {
-	console.log(code);
+	document.querySelector("#error").innerHTML = "";
+	let fetchoptions = {
+		method: 'DELETE',
+		headers: {
+			'Authorization': 'Bearer ' + window.sessionStorage.getItem("sessionToken")
+		}
+	}
 	
-	fetch('http://localhost:8080/firstapp/restservices/countries/' + code, {method: 'DELETE'})
+	fetch('/firstapp/restservices/countries/' + code, fetchoptions)
 		.then((response) => {
-			initPage();
-			console.log("deleted");
+			if (response.status == 403) {
+				document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
+			} else {
+				initPage();
+				console.log("deleted");
+			}
 		});
 }
 
@@ -14,8 +24,19 @@ function store() {
 	let er = document.getElementById("error");
 	er.innerHtml = "";
 	
-	fetch('http://localhost:8080/firstapp/restservices/countries', {method: 'POST', body: encData})
+	let fetchoptions = {
+		method: 'POST',
+		body: encData,
+		headers: {
+			'Authorization': 'Bearer ' + window.sessionStorage.getItem("sessionToken")
+		}
+	}
+	
+	fetch('/firstapp/restservices/countries', fetchoptions)
 	.then((response) => {
+		if (response.status == 403) {
+			document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
+		}
 		if (response.status == 402) { 
 			er.innerHTML = "er is iets fout gegaan.";
 			console.log("error2");
@@ -40,19 +61,45 @@ function updateLand(clickedButton) {
 		population: Number.parseInt(pop)
 	};
 	
+	
+	
 	var encData = new URLSearchParams(data);
 	console.log(encData);
-	fetch("http://localhost:8080/firstapp/restservices/countries/" + code, {method: 'PUT', body: encData})
-		.then((myJson) => {
-			console.log(myJson);
-		});
 	
-	console.log(data);
+	document.querySelector("#error").innerHTML = "";
+	let fetchoptions = {
+		method: 'PUT',
+		body: encData,
+		headers: {
+			'Authorization': 'Bearer ' + window.sessionStorage.getItem("sessionToken")
+		}
+	}
+	fetch("/firstapp/restservices/countries/" + code, fetchoptions)
+		.then((myJson) => {
+			if (myJson.status == 403) {
+				document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
+			} else {
+				console.log(myJson);
+			}
+		});
 }
 
 function initPage() {
-	fetch('http://localhost:8080/firstapp/restservices/countries/')
-		.then(response => response.json())
+	let fetchoptions = {
+		headers: {
+			'Authorization': 'Bearer ' + window.sessionStorage.getItem("sessionToken")
+		}
+	}
+	
+	document.querySelector("#error").innerHTML = "";
+	fetch('/firstapp/restservices/countries/', fetchoptions)
+		.then((response) => {
+			if (response.status == 403) {
+				document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
+			} else {
+				return response.json();
+			}
+		})
 		.then((myJson) => {
 			let table = document.querySelector('tbody');
 			table.innerHTML = "";
@@ -84,14 +131,8 @@ function initPage() {
 					let updateBuntton = event.target.closest(".update");
 					updateLand(updateBuntton);
 				}, false);
-			} 
+			}  
 		});
 }
-
-//let saveButton = document.querySelector('#save_button');
-//saveButton.addEventListener('click', (event) => {
-//	store();
-//	initPage();
-//}, false);
 
 initPage();

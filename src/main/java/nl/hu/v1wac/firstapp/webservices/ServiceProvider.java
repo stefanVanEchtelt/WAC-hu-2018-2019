@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -32,6 +33,7 @@ public class ServiceProvider {
 	}
 	
 	@GET
+	@RolesAllowed("user")
 	@Produces("application/json")
 	public String getCounties() {
 		JsonArrayBuilder jab = Json.createArrayBuilder();
@@ -56,6 +58,7 @@ public class ServiceProvider {
     }
 	
 	@GET
+	@RolesAllowed("user")
 	@Path("{code}")
 	@Produces("application/json")
 	public String getCounty(@PathParam("code") String code) {
@@ -77,6 +80,7 @@ public class ServiceProvider {
 	}
 	
 	@GET
+	@RolesAllowed("user")
 	@Path("/largestsurfaces")
 	@Produces("application/json")
 	public String getCountiesLargesSurface() {
@@ -99,6 +103,7 @@ public class ServiceProvider {
 	}
 	
 	@GET
+	@RolesAllowed("user")
 	@Path("/largestpopulations")
 	@Produces("application/json")
 	public String getCountiesLargesPopulation() {
@@ -121,6 +126,7 @@ public class ServiceProvider {
 	}
 	
 	@PUT
+	@RolesAllowed("user")
 	@Path("{code}")
 	public Response update(@PathParam("code") String code, @FormParam("name") String naam, @FormParam("capital") String hoofdstad,
 			@FormParam("surface") int oppervlakte, @FormParam("population") int mensen) {
@@ -129,8 +135,8 @@ public class ServiceProvider {
 		c.setCode(code);
 		c.setName(naam);
 		c.setCapital(hoofdstad);
-		c.setPopulation(oppervlakte);
-		c.setSurface(mensen);
+		c.setPopulation(mensen);
+		c.setSurface(oppervlakte);
 		boolean r = db.update(c);
 		
 		if (!r) {
@@ -141,6 +147,7 @@ public class ServiceProvider {
 	}
 	
 	@POST
+	@RolesAllowed("user")
 	public Response save(@FormParam("code") String coden, @FormParam("name") String naam, @FormParam("capital") String hoofdstad) {
 		CountryPostgresDaolmpl db = new CountryPostgresDaolmpl();
 		Country c = new Country();
@@ -157,6 +164,7 @@ public class ServiceProvider {
 	}
 	
 	@DELETE
+	@RolesAllowed("user")
 	@Path("{code}")
 	public Response delete(@PathParam("code") String code) {
 		CountryPostgresDaolmpl db = new CountryPostgresDaolmpl();

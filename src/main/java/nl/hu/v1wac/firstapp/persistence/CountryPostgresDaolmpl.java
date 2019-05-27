@@ -50,7 +50,7 @@ public class CountryPostgresDaolmpl extends PostgresBaseDao implements CountryDa
 	}
 	
 	public List<Country> findAll() {
-		return this.getCountries("select * from country order by name limit 20");
+		return this.getCountries("select * from country order by code limit 20");
 	}
 	
 	public Country findByCode(String codeSearch) {
