@@ -21,8 +21,7 @@ function deleteLand(code) {
 function store() {	
 	var formData = new FormData(document.querySelector("#save_form"));
 	var encData = new URLSearchParams(formData.entries());
-	let er = document.getElementById("error");
-	er.innerHtml = "";
+	document.querySelector("#error").innerHTML = "";
 	
 	let fetchoptions = {
 		method: 'POST',
@@ -38,9 +37,8 @@ function store() {
 			document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
 		}
 		if (response.status == 402) { 
-			er.innerHTML = "er is iets fout gegaan.";
+			document.querySelector("#error").innerHTML = "er is iets fout gegaan.";
 			console.log("error2");
-			console.log(er);
 		}
 		initPage();
 	});
