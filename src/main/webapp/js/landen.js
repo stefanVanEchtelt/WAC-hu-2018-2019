@@ -36,12 +36,13 @@ function store() {
 		console.log(response.status);
 		if (response.status == 403) {
 			document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
-		}
-		if (response.status == 402) { 
+		} else if (response.status == 402) { 
 			document.querySelector("#error").innerHTML = "er is iets fout gegaan.";
 			console.log("error2");
+			document.querySelector("#error").innerHTML = "Er is iets fout gegaan.";
+		} else {
+			initPage();
 		}
-		initPage();
 	});
 	
 	return false;
