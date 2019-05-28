@@ -33,6 +33,7 @@ function store() {
 	
 	fetch('/restservices/countries', fetchoptions)
 	.then((response) => {
+		console.log(response.status);
 		if (response.status == 403) {
 			document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
 		}
