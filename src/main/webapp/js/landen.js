@@ -7,7 +7,7 @@ function deleteLand(code) {
 		}
 	}
 	
-	fetch('/firstapp/restservices/countries/' + code, fetchoptions)
+	fetch('/restservices/countries/' + code, fetchoptions)
 		.then((response) => {
 			if (response.status == 403) {
 				document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
@@ -32,7 +32,7 @@ function store() {
 		}
 	}
 	
-	fetch('/firstapp/restservices/countries', fetchoptions)
+	fetch('/restservices/countries', fetchoptions)
 	.then((response) => {
 		if (response.status == 403) {
 			document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
@@ -74,7 +74,7 @@ function updateLand(clickedButton) {
 			'Authorization': 'Bearer ' + window.sessionStorage.getItem("sessionToken")
 		}
 	}
-	fetch("/firstapp/restservices/countries/" + code, fetchoptions)
+	fetch("/restservices/countries/" + code, fetchoptions)
 		.then((myJson) => {
 			if (myJson.status == 403) {
 				document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";
@@ -92,7 +92,7 @@ function initPage() {
 	}
 	
 	document.querySelector("#error").innerHTML = "";
-	fetch('/firstapp/restservices/countries/', fetchoptions)
+	fetch('/restservices/countries/', fetchoptions)
 		.then((response) => {
 			if (response.status == 403) {
 				document.querySelector("#error").innerHTML = "Log in om deze actie te doen.";

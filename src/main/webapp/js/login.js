@@ -4,7 +4,7 @@ saveButton.addEventListener('click', (event) => {
 	var encData = new URLSearchParams(formData.entries());
 	document.querySelector("#error").innerHTML = "";
 	
-	fetch('restservices/authentication', {method: 'POST', body: encData})
+	fetch('/restservices/authentication', {method: 'POST', body: encData})
 	.then((response) => { 
 		if (response.ok) {
 			return response.json();
@@ -14,6 +14,6 @@ saveButton.addEventListener('click', (event) => {
 	})
 	.then((myJson) => {
 		window.sessionStorage.setItem("sessionToken", myJson.JWT);
-		window.location.href = "https://localhost:8443/firstapp/landen.html";
+		window.location.href = "/landen.html";
 	});
 }, false);
