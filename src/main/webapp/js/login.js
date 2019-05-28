@@ -4,7 +4,7 @@ saveButton.addEventListener('click', (event) => {
 	var encData = new URLSearchParams(formData.entries());
 	document.querySelector("#error").innerHTML = "";
 	
-	fetch('/firstapp/restservices/authentication', {method: 'POST', body: encData})
+	fetch('restservices/authentication', {method: 'POST', body: encData})
 	.then((response) => { 
 		if (response.ok) {
 			return response.json();
